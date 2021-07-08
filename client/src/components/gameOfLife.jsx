@@ -1,0 +1,111 @@
+//import logo from './logo.svg';
+
+import React, { useState, useEffect } from "react";
+function GameOfLIfe() {
+  const inStatus = [];
+  const [stateDescription]=useState(["alive","dead"]);
+  for (let i = 0; i < 800; i++) {
+    let val = []
+    for (let j = 0; j < 800; j++)
+      val.push(stateDescription[1]);
+    inStatus.push(val);
+  }
+  inStatus[400][399] = stateDescription[0];
+  inStatus[400][400] = stateDescription[0];
+  inStatus[400][401] = stateDescription[0];
+  inStatus[401][400] = stateDescription[0];
+  const [cellStatus, setCellStatus] = useState(inStatus);
+  const [count, setCount] = useState(parseInt(0));
+  
+  function handleSimulation() {
+
+    let newStatus = [];
+    for (let i = 0; i <= 799; i++) {
+      let arr = [];
+      for (let j = 0; j <= 799; j++) {
+        arr.push(cellStatus[i][j]);
+
+      }
+      newStatus.push(arr);
+    }
+    for (let i = 0; i < 800; i++) {
+
+      for (let j = 0; j < 800; j++) {
+        let neighbour = 0;
+        for (let k = Math.max(0, i - 1); k <= Math.min(i + 1, 799); k++) {
+          for (let l = Math.max(0, j - 1); l <= Math.min(j + 1, 799); l++) {
+            if (k !== i || l !== j) {
+              if (cellStatus[k][l] === stateDescription[0])
+                neighbour = neighbour + 1;
+            }
+          }
+        }
+        if (cellStatus[i][j] === stateDescription[0]) {
+          if (neighbour > 3 || neighbour < 1) {
+            //console.log(cellStatus[i][j]);
+            newStatus[i][j] = stateDescription[1];
+            //console.log(i + " " + j + " alive-dead");
+            //console.log(cellStatus[i][j]);
+          }
+
+        }
+        else {
+          if (neighbour === 3) {
+            //console.log(cellStatus[i][j]);
+            newStatus[i][j] = stateDescription[0];
+            //console.log(i + " " + j + " dead-alive");
+            //console.log(cellStatus[i][j]);
+          }
+        }
+      }
+    }
+
+
+
+
+
+    setCellStatus(newStatus);
+
+
+  }
+  
+  useEffect(() => {
+
+
+    const request = () => {
+      handleSimulation();
+      setTimeout(() => {
+        setCount(count + 1);
+      }, 1000);
+    };
+    if (count > 0 && count < 500) {
+      request();
+    }}, [count])
+
+
+
+
+  return (
+    <div className="main">
+      <div className="grid">
+        {Array.from({ length: 200 }, (_, j) =>
+          <div className="col" key={j}>
+            {Array.from({ length: 200 }, (_, i) => <span key={i} className={cellStatus[j+300][i+300] + " cell"}></span>)}
+          </div>
+        )}
+
+
+
+      </div>
+      <div>
+        <button onClick={() => setCount(parseInt(1))}>
+          Generate
+        </button>
+      </div>
+
+
+    </div >
+  );
+}
+
+export default GameOfLIfe;
