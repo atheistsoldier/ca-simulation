@@ -10,9 +10,7 @@ function BriansBrain() {
       val.push(stateDescription[1]);
     inStatus.push(val);
   }
-  const onStyle={
-    "background-color": "aquamarine"
-  };
+
   inStatus[400][399] = stateDescription[0];
   inStatus[400][400] = stateDescription[0];
   inStatus[401][399] = stateDescription[0];
